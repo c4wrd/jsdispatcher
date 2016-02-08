@@ -2,14 +2,14 @@
   "name": "jsdispatcher",
   "version": "0.1.0",
   "description": "A powerful JavaScript dispatcher module that makes development with dispatchers much easier!",
-  "main": "dist/dispatcher.js",
+  "main": "lib/dispatcher.js",
   "scripts": {
-    "build": "package",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "./node_modules/.bin/babel src --out-dir lib",
+    "test": "echo \"Not implemented yet...\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/c4wrd/jsdispatcher.git"
+    "url": "https://github.com/c4wrd/jsdispatcher.git"
   },
   "keywords": [
     "javascript",
@@ -24,9 +24,7 @@
   },
   "homepage": "https://github.com/c4wrd/jsdispatcher#readme",
   "devDependencies": {
-    "babel-core": "^6.4.5",
-    "babel-loader": "^6.2.2",
-    "babel-preset-es2015": "^6.3.13",
-    "webpack": "^1.12.13"
+    "babel-cli": "^6.4.5",
+    "babel-preset-es2015": "^6.3.13"
   }
 }
