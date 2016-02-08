@@ -24,7 +24,7 @@
  * SOFTWARE.
  */
 
-class Dispatcher {
+export default class Dispatcher {
 
     /**
      * Creates an additional dispatcher instance with a given name and adds
@@ -55,6 +55,13 @@ class Dispatcher {
     }
 
     /**
+     * Returns the current default dispatcher instance
+     */
+    static getDefault() {
+        return Dispatcher._dispatchers['default'];
+    }
+
+    /**
      * Registers an additional register Function prototype method with a specified
      *  dispatcher instance
      * @param dispatcher_name: The name of the dispatcher, accessible as
@@ -73,14 +80,17 @@ class Dispatcher {
     }
 
     /**
-     * Creates a new dispatcher instnace
-     * @param createPrototype: if true we will register this Dispatcher instance as
-     * the default dispatcher instance associated with Function.prototype.register
+     * Creates a new dispatcher instance and sets this instance as the default instance.
+     * @param defaultInstance: if true we will register this Dispatcher instance as
+     * the default dispatcher instance, as well as registering the Function.prototype
+     * associated with this instance's register method.
      */
-    constructor(createPrototype = true) {
+    constructor(defaultInstance = false) {
         this._events = {};
 
-        if (createPrototype == true) {
+        if (defaultInstance == true) {
+            Dispatcher._dispatchers = Dispatcher._dispatchers || {};
+            Dispatcher._dispatchers['default'] = this;
             var _dispatcher = this;
 
             // Allows us to register a function with function.register(signal)
@@ -110,7 +120,13 @@ class Dispatcher {
      * Emits a signal that invokes each of it's callbacks asynchronously
      */
     emitAsync(signal) {
-
+        if (this._events[signal]) {
+            this._events[signal].map((callback) => {
+               setTimeout( () => {
+                   callback.apply(null, args);
+               }, 0);
+            });
+        }
     }
 
     /**
@@ -131,7 +147,7 @@ class Dispatcher {
      * @param args: that to be registered with this signal
      */
     register(signal, ...args) {
-        if (typeof signal != 'undefined' && typeof callback != 'undefined') {
+        if (typeof signal != 'undefined' && typeof args != 'undefined') {
             this._events[signal] = this._events[signal] || [];
 
             args.forEach((callback) => {
@@ -170,5 +186,10 @@ class Dispatcher {
     }
 }
 
+/**s
+ * The default exports of this module are the class to instantiate new dispatchers,
+ * as well as the default dispatcher  which is accessible through $Dispatcher
+ */
 
-export default Dispatcher
+export var $Dispatcher = new Dispatcher(true);
+Dispatcher._dispatchers['default'] = $Dispatcher;
